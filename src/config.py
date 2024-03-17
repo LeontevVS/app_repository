@@ -29,6 +29,17 @@ class DBConfig(BaseSettings):
         return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
 
 
+class RedisAuthConfig(BaseSettings):
+    host: str = Field(alias='REDIS_AUTH_HOST')
+    port: int = Field(alias='REDIS_AUTH_PORT')
+    password: str = Field(alias='REDIS_AUTH_PASSWORD')
+
+    @computed_field
+    @property
+    def dsn(self) -> str:
+        return f"redis:?{self.host}:{self.port}&auth={self.password}"
+
+
 class Settings(BaseSettings):
     db: DBConfig = DBConfig()
     auth_jwt: AuthJWT = AuthJWT()

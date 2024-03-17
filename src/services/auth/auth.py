@@ -6,12 +6,14 @@ from jwt import InvalidTokenError
 from schemas.auth import AuthDTO, TokenPayload
 from schemas.auth import UserTokenInfoDTO
 from .consts import DEFAULT_EXP_ACCESS_DELTA, DEFAULT_EXP_REFRESH_DELTA
+from .repositories.auth_repository import AuthRepository
 from .use_cases import TokenProcessor
 
 
 class AuthService:
-    def __init__(self):
+    def __init__(self, auth_repository: AuthRepository):
         self.token_processor = TokenProcessor()
+        self._auth_repository = auth_repository
 
     async def get_couple_tokens_for_user(self, user: UserTokenInfoDTO) -> AuthDTO:
         now = datetime.utcnow()

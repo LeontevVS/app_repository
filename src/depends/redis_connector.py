@@ -1,3 +1,6 @@
 import redis.asyncio as redis
 
-pool = redis.ConnectionPool.from_url('')
+from config import RedisAuthConfig
+
+
+redis_pool = redis.ConnectionPool.from_url(RedisAuthConfig().dsn)
