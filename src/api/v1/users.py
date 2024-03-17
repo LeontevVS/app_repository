@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Response
 
-from depends.auth_users import auth_user_service
+from depends.auth_users import get_auth_user_service
 from schemas.users import UserLogInDTO, UserSignInDTO
 from services.auth.consts import DEFAULT_EXP_REFRESH_SECONDS
-
+from services.auth_users import AuthUserService
 
 router = APIRouter(tags=['users'], prefix='/users')
 
@@ -12,6 +12,7 @@ router = APIRouter(tags=['users'], prefix='/users')
 async def auth_user(
     response: Response,
     user: UserLogInDTO = Depends(),
+    auth_user_service: AuthUserService = Depends(get_auth_user_service),
 ):
     tokens = await auth_user_service.login_user(user)
     response.set_cookie(
@@ -29,6 +30,7 @@ async def auth_user(
 async def register_user(
     response: Response,
     user: UserSignInDTO = Depends(),
+    auth_user_service: AuthUserService = Depends(get_auth_user_service),
 ):
     tokens = await auth_user_service.signin_user(user)
     response.set_cookie(

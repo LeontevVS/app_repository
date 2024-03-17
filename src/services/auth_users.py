@@ -1,4 +1,7 @@
+from typing import Callable
+
 from fastapi import HTTPException, status, Header
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from enums.user_enums import PrivateUserRoles
 from schemas.auth import UserTokenInfoDTO, AuthDTO, AuthenticatedUserDTO
@@ -10,14 +13,16 @@ from services.users import UserService
 class AuthUserService:
     def __init__(
         self,
+        get_session_maker: Callable[[], async_sessionmaker],
         user_service: UserService,
         auth_service: AuthService,
     ):
+        self._get_session_maker = get_session_maker
         self.user_service = user_service
         self.auth_service = auth_service
 
     async def login_user(self, user: UserLogInDTO) -> AuthDTO:
-        authenticated_user = await self.user_service.get_user_by_login_creds(user)
+        authenticated_user = await self.user_service.get_user_by_login_creds(user=user)
         couple_token = await self.auth_service.get_couple_tokens_for_user(
             UserTokenInfoDTO(
                 id=authenticated_user.id,
@@ -27,7 +32,7 @@ class AuthUserService:
         return couple_token
 
     async def signin_user(self, user: UserSignInDTO) -> AuthDTO:
-        authenticated_user = await self.user_service.create_user(user)
+        authenticated_user = await self.user_service.create_user(user=user)
         couple_token = await self.auth_service.get_couple_tokens_for_user(
             UserTokenInfoDTO(
                 id=authenticated_user.id,

@@ -1,3 +1,5 @@
+from typing import Callable
+
 import bcrypt
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -8,16 +10,17 @@ from schemas.users import UserSignInDTO, UserLogInDTO, ValidUser, UserToCreate
 
 
 class UserService:
-    def __init__(self, user_repository: UserRepository):
+    def __init__(
+        self,
+        get_session_maker: Callable[[], async_sessionmaker],
+        user_repository: UserRepository
+    ):
+        self._get_session_maker = get_session_maker
         self.user_repository = user_repository
 
-    async def get_user_by_login_creds(
-        self,
-        async_session_maker: async_sessionmaker,
-        user: UserLogInDTO,
-    ) -> ValidUser:
+    async def get_user_by_login_creds(self, user: UserLogInDTO) -> ValidUser:
         existing_user = await self.user_repository.get_user_by_phone_number(
-            async_session_maker=async_session_maker,
+            async_session_maker=self._get_session_maker(),
             phone_number=user.phone_number,
         )
         if not existing_user:
@@ -37,13 +40,9 @@ class UserService:
             role=existing_user.role,
         )
 
-    async def create_user(
-        self,
-        async_session_maker: async_sessionmaker,
-        user: UserSignInDTO
-    ) -> ValidUser:
+    async def create_user(self, user: UserSignInDTO) -> ValidUser:
         existing_user = await self.user_repository.get_user_by_phone_number(
-            async_session_maker=async_session_maker,
+            async_session_maker=self._get_session_maker(),
             phone_number=user.phone_number,
         )
         if existing_user:
@@ -57,7 +56,7 @@ class UserService:
             hashed_password=self._hash_password(user.password)
         )
         new_user = await self.user_repository.create_user(
-            async_session_maker=async_session_maker,
+            async_session_maker=self._get_session_maker(),
             user_data=user_to_create,
         )
         return ValidUser(
