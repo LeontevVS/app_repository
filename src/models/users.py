@@ -7,6 +7,6 @@ from models.base_model import ORMBaseModel
 class UserModel(ORMBaseModel):
     __tablename__ = 'users'
 
-    phone_number: Mapped[str] = mapped_column(nullable=False)
+    phone_number: Mapped[str] = mapped_column(nullable=False, unique=True)
     role: Mapped[PrivateUserRoles] = mapped_column(nullable=False)
     hashed_password: Mapped[bytes] = mapped_column(nullable=False)

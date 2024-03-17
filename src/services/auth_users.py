@@ -36,31 +36,7 @@ class AuthUserService:
         )
         return couple_token
 
-    async def auth_seller_role(self, access_token: Header()) -> AuthenticatedUserDTO:
-        return await self._auth_user(
-            access_token=access_token,
-            roles=[PrivateUserRoles.SELLER, PrivateUserRoles.ADMIN]
-        )
-
-    async def auth_buyer_role(self, access_token: Header()) -> AuthenticatedUserDTO:
-        return await self._auth_user(
-            access_token=access_token,
-            roles=[PrivateUserRoles.BUYER, PrivateUserRoles.ADMIN]
-        )
-
-    async def auth_admin_role(self, access_token: Header()) -> AuthenticatedUserDTO:
-        return await self._auth_user(
-            access_token=access_token,
-            roles=[PrivateUserRoles.ADMIN]
-        )
-
-    async def auth_all_role(self, access_token: Header()) -> AuthenticatedUserDTO:
-        return await self._auth_user(
-            access_token=access_token,
-            roles=[PrivateUserRoles.ADMIN, PrivateUserRoles.BUYER, PrivateUserRoles.SELLER]
-        )
-
-    async def _auth_user(self, access_token: str, roles: list[PrivateUserRoles]) -> AuthenticatedUserDTO:
+    async def auth_user(self, access_token: str, roles: list[PrivateUserRoles]) -> AuthenticatedUserDTO:
         token_user_info = await self.auth_service.get_token_info(access_token)
         authenticated_user = AuthenticatedUserDTO(
             id=token_user_info.id,
@@ -72,3 +48,32 @@ class AuthUserService:
                 detail=f"invalid token error",
             )
         return authenticated_user
+
+
+class UserPermission:
+    def __init__(self, auth_user_service: AuthUserService):
+        self.auth_user_service = auth_user_service
+
+    async def auth_seller_permissions(self, access_token: Header()) -> AuthenticatedUserDTO:
+        return await self.auth_user_service.auth_user(
+            access_token=access_token,
+            roles=[PrivateUserRoles.SELLER, PrivateUserRoles.ADMIN]
+        )
+
+    async def auth_buyer_permissions(self, access_token: Header()) -> AuthenticatedUserDTO:
+        return await self.auth_user_service.auth_user(
+            access_token=access_token,
+            roles=[PrivateUserRoles.BUYER, PrivateUserRoles.ADMIN]
+        )
+
+    async def auth_admin_permissions(self, access_token: Header()) -> AuthenticatedUserDTO:
+        return await self.auth_user_service.auth_user(
+            access_token=access_token,
+            roles=[PrivateUserRoles.ADMIN]
+        )
+
+    async def auth_all_permissions(self, access_token: Header()) -> AuthenticatedUserDTO:
+        return await self.auth_user_service.auth_user(
+            access_token=access_token,
+            roles=[PrivateUserRoles.ADMIN, PrivateUserRoles.BUYER, PrivateUserRoles.SELLER]
+        )

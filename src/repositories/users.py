@@ -1,3 +1,6 @@
+from typing import List
+
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from schemas.users import UserToCreate
@@ -20,6 +23,16 @@ class UserRepository(ORMRepository):
         )
         await self._create_one(async_session_maker, new_user)
         return new_user
+
+    async def get_user_by_phone_number(
+        self,
+        async_session_maker: async_sessionmaker,
+        phone_number: str,
+    ) -> UserModel | None:
+        async with async_session_maker() as session:
+            stmt = select(self.model).where(UserModel.phone_number == phone_number)
+            result = await session.execute(stmt)
+            return result.scalars().one()
 
     # async def get_all_landings(self) -> List[LandingDTO]:
     #     return [

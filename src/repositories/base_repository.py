@@ -14,7 +14,7 @@ class IRepository(Protocol):
         self,
         async_session_maker: async_sessionmaker,
         model: ORMBaseModel,
-    ) -> ORMBaseModel:
+    ):
         pass
 
     # async def raw_get_one_by_id(self, id: int) -> ORMBaseModel:
