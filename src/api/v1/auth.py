@@ -19,6 +19,7 @@ async def get_token_couple(
     refresh_token=Cookie(),
     auth_service: AuthService = Depends(get_auth_service),
 ):
+    # TODO: add removing refresh tokens if token was deactivated
     tokens = await auth_service.reissue_tokens(refresh_token)
     response.set_cookie(
         key='refresh_token',
