@@ -1,10 +1,15 @@
 import jwt
 
 from schemas.auth import AuthDTO, TokenPayload
+from services.auth.consts import DEFAULT_EXP_REFRESH_DELTA
+from services.auth.repositories.auth_repository import AuthRepository
 from src.config import settings
 
 
 class TokenProcessor:
+    def __init__(self, auth_repository: AuthRepository):
+        self._auth_repository = auth_repository
+
     async def get_couple_tokens(
         self,
         access_payload: TokenPayload,
@@ -12,7 +17,11 @@ class TokenProcessor:
     ) -> AuthDTO:
         access_token = await self.get_token(access_payload)
         refresh_token = await self.get_token(refresh_payload)
-        # TODO savin actual refresh token
+        await self._auth_repository.set_cache_token(
+            token=refresh_token,
+            token_info=refresh_payload,
+            exp=DEFAULT_EXP_REFRESH_DELTA,
+        )
         return AuthDTO(
             access_token=access_token,
             refresh_token=refresh_token,

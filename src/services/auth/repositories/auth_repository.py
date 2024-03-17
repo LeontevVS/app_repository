@@ -1,4 +1,9 @@
+from datetime import timedelta
+
+import orjson
 from redis.asyncio import Redis, ConnectionPool
+
+from schemas.auth import TokenPayload
 
 
 class RedisConnection:
@@ -18,6 +23,24 @@ class AuthRepository:
     def __init__(self, redis_pool: ConnectionPool):
         self._redis_pool = redis_pool
 
-    async def some(self):
+    async def get_refresh_token_info(self, token: str) -> TokenPayload | None:
         async with RedisConnection(self._redis_pool) as connection:
-            pass
+            cache_token_info = await connection.get(token)
+            if cache_token_info:
+                return TokenPayload.model_validate(
+                    obj=orjson.loads(cache_token_info),
+                    from_attributes=True,
+                )
+
+    async def set_cache_token(
+        self,
+        token: str,
+        token_info: TokenPayload,
+        exp: timedelta,
+    ) -> None:
+        async with RedisConnection(self._redis_pool) as connection:
+            await connection.set(
+                name=token,
+                value=orjson.dumps(token_info.model_dump()),
+                ex=exp,
+            )

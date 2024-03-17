@@ -12,7 +12,7 @@ from .use_cases import TokenProcessor
 
 class AuthService:
     def __init__(self, auth_repository: AuthRepository):
-        self.token_processor = TokenProcessor()
+        self.token_processor = TokenProcessor(auth_repository)
         self._auth_repository = auth_repository
 
     async def get_couple_tokens_for_user(self, user: UserTokenInfoDTO) -> AuthDTO:
@@ -39,7 +39,11 @@ class AuthService:
     async def get_access_token(self, refresh_token: str) -> str:
         now = datetime.utcnow()
         token_info = await self.get_token_info(refresh_token)
-        # TODO: refresh token validation
+        if await self.is_expired_refresh_token(refresh_token):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"invalid token error",
+            )
         access_payload = TokenPayload(
             sub=token_info.id,
             iat=now.timestamp(),
@@ -49,12 +53,13 @@ class AuthService:
         )
         return await self.token_processor.get_token(access_payload)
 
+    async def is_expired_refresh_token(self, refresh_token: str) -> bool:
+        token_info = self._auth_repository.get_refresh_token_info(refresh_token)
+        return token_info is None
+
     async def get_token_info(self, token: str) -> UserTokenInfoDTO:
-        try:
-            payload = self.token_processor.get_token_payload(token)
-            if payload.exp < datetime.utcnow().timestamp():
-                raise InvalidTokenError()
-        except InvalidTokenError:
+        payload = self.token_processor.get_token_payload(token)
+        if payload.exp < datetime.utcnow().timestamp():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=f"invalid token error",
