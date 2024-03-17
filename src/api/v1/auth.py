@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
     Response,
-    Cookie,
+    Request,
 )
 
 from services.auth.auth import AuthService
@@ -16,10 +16,11 @@ router = APIRouter(tags=['auth'], prefix='/auth')
 @router.post('/refresh/')
 async def get_token_couple(
     response: Response,
-    refresh_token=Cookie(),
+    request: Request,
     auth_service: AuthService = Depends(get_auth_service),
 ):
     # TODO: add removing refresh tokens if token was deactivated
+    refresh_token = request.cookies.get('refresh_token', '')
     tokens = await auth_service.reissue_tokens(refresh_token)
     response.set_cookie(
         key='refresh_token',
@@ -32,11 +33,12 @@ async def get_token_couple(
     }
 
 
-@router.post('/auth/')
+@router.post('/')
 async def get_access_token(
-    refresh_token=Cookie(),
+    request: Request,
     auth_service: AuthService = Depends(get_auth_service),
 ):
+    refresh_token = request.cookies.get('refresh_token', '')
     access_token = await auth_service.get_access_token(refresh_token)
     return {
         'access_token': access_token,
