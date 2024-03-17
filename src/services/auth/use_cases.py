@@ -27,6 +27,15 @@ class TokenProcessor:
             refresh_token=refresh_token,
         )
 
+    async def create_refresh_token(self, payload: TokenPayload) -> str:
+        refresh_token = await self.get_token(payload)
+        await self._auth_repository.set_cache_token(
+            token=refresh_token,
+            token_info=payload,
+            exp=DEFAULT_EXP_REFRESH_DELTA,
+        )
+        return refresh_token
+
     async def get_token(self, payload: TokenPayload) -> str:
         return self._encode_jwt(payload)
 
@@ -54,4 +63,8 @@ class TokenProcessor:
             public_key,
             algorithms=[algorithm],
         )
-        return TokenPayload(**decoded)
+        return TokenPayload().model_validate(obj=decoded, from_attributes=True)
+
+    async def is_nonexistent_refresh_token(self, refresh_token: str) -> bool:
+        token_info = self._auth_repository.get_refresh_token_info(refresh_token)
+        return token_info is None

@@ -1,7 +1,5 @@
-from typing import Callable
-
 from fastapi import HTTPException, status, Header
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from enums.user_enums import PrivateUserRoles
 from schemas.auth import UserTokenInfoDTO, AuthDTO, AuthenticatedUserDTO
@@ -13,7 +11,7 @@ from services.users import UserService
 class AuthUserService:
     def __init__(
         self,
-        async_session_maker: async_sessionmaker,
+        async_session_maker: async_sessionmaker[AsyncSession],
         user_service: UserService,
         auth_service: AuthService,
     ):

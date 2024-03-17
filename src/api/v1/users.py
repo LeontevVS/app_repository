@@ -11,7 +11,7 @@ router = APIRouter(tags=['users'], prefix='/users')
 @router.post('/login/')
 async def auth_user(
     response: Response,
-    user: UserLogInDTO = Depends(),
+    user: UserLogInDTO,
     auth_user_service: AuthUserService = Depends(get_auth_user_service),
 ):
     tokens = await auth_user_service.login_user(user)
@@ -29,7 +29,7 @@ async def auth_user(
 @router.post('/signin/')
 async def register_user(
     response: Response,
-    user: UserSignInDTO = Depends(),
+    user: UserSignInDTO,
     auth_user_service: AuthUserService = Depends(get_auth_user_service),
 ):
     tokens = await auth_user_service.signin_user(user)

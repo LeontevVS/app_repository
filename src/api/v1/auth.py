@@ -19,14 +19,14 @@ async def get_token_couple(
     refresh_token=Cookie(),
     auth_service: AuthService = Depends(get_auth_service),
 ):
-    access_token = await auth_service.get_access_token(refresh_token)
+    tokens = await auth_service.reissue_tokens(refresh_token)
     response.set_cookie(
         key='refresh_token',
-        value=...,
+        value=tokens.refresh_token,
         max_age=DEFAULT_EXP_REFRESH_SECONDS,
     )
     return {
-        'access_token': access_token,
+        'access_token': tokens.access_token,
         'type': 'Bearer',
     }
 

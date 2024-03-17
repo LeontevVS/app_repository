@@ -21,14 +21,14 @@ class AuthService:
             sub=user.id,
             iat=now.timestamp(),
             nbf=now.timestamp(),
-            exp=(now - DEFAULT_EXP_ACCESS_DELTA).timestamp(),
+            exp=(now + DEFAULT_EXP_ACCESS_DELTA).timestamp(),
             role=user.role,
         )
         refresh_payload = TokenPayload(
             sub=user.id,
             iat=now.timestamp(),
             nbf=now.timestamp(),
-            exp=(now - DEFAULT_EXP_REFRESH_DELTA).timestamp(),
+            exp=(now + DEFAULT_EXP_REFRESH_DELTA).timestamp(),
             role=user.role,
         )
         return await self.token_processor.get_couple_tokens(
@@ -36,10 +36,27 @@ class AuthService:
             refresh_payload=refresh_payload,
         )
 
+    async def reissue_tokens(self, refresh_token: str) -> AuthDTO:
+        now = datetime.utcnow()
+        access_token = await self.get_access_token(refresh_token)
+        token_info = await self.get_token_info(refresh_token)
+        refresh_payload = TokenPayload(
+            sub=token_info.id,
+            iat=now.timestamp(),
+            nbf=now.timestamp(),
+            exp=(now + DEFAULT_EXP_REFRESH_DELTA).timestamp(),
+            role=token_info.role,
+        )
+        refresh_token = await self.token_processor.create_refresh_token(refresh_payload)
+        return AuthDTO(
+            access_token=access_token,
+            refresh_token=refresh_token,
+        )
+
     async def get_access_token(self, refresh_token: str) -> str:
         now = datetime.utcnow()
         token_info = await self.get_token_info(refresh_token)
-        if await self.is_expired_refresh_token(refresh_token):
+        if await self.token_processor.is_nonexistent_refresh_token(refresh_token):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=f"invalid token error",
@@ -53,16 +70,13 @@ class AuthService:
         )
         return await self.token_processor.get_token(access_payload)
 
-    async def is_expired_refresh_token(self, refresh_token: str) -> bool:
-        token_info = self._auth_repository.get_refresh_token_info(refresh_token)
-        return token_info is None
-
     async def get_token_info(self, token: str) -> UserTokenInfoDTO:
-        payload = self.token_processor.get_token_payload(token)
-        if payload.exp < datetime.utcnow().timestamp():
+        try:
+            payload = self.token_processor.get_token_payload(token)
+        except InvalidTokenError:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"invalid token error",
+                detail=f"invalid token error"
             )
         return UserTokenInfoDTO(
             id=payload.sub,

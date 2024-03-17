@@ -4,7 +4,7 @@ from enums.user_enums import PrivateUserRoles
 
 
 class TokenPayload(BaseModel):
-    sub: str
+    sub: int
     iat: float
     nbf: float
     exp: float

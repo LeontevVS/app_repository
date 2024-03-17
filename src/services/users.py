@@ -2,7 +2,7 @@ from typing import Callable
 
 import bcrypt
 from fastapi import HTTPException, status
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from enums.user_enums import PrivateUserRoles
 from repositories.users import UserRepository
@@ -12,7 +12,7 @@ from schemas.users import UserSignInDTO, UserLogInDTO, ValidUser, UserToCreate
 class UserService:
     def __init__(
         self,
-        async_session_maker: async_sessionmaker,
+        async_session_maker: async_sessionmaker[AsyncSession],
         user_repository: UserRepository
     ):
         self._async_session_maker = async_session_maker

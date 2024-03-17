@@ -37,7 +37,7 @@ class RedisAuthConfig(BaseSettings):
     @computed_field
     @property
     def dsn(self) -> str:
-        return f"redis:?{self.host}:{self.port}&auth={self.password}"
+        return f"redis://app:{self.password}@{self.host}:{self.port}"
 
 
 class Settings(BaseSettings):

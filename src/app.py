@@ -1,8 +1,12 @@
+import uvicorn
 from fastapi import FastAPI
 
-from routing.landings import router as landings_routing
+from api import router
 
 
 app = FastAPI()
 
-app.include_router(landings_routing)
+app.include_router(router)
+
+
+uvicorn.run(app=app, host='localhost', port=8080)
