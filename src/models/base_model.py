@@ -11,6 +11,6 @@ from sqlalchemy.orm import (
 
 class ORMBaseModel(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True)
-    created_at: Mapped[datetime.datetime] = mapped_column(server_default=func.utcnow())
+    created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow)
     deleted_at: Mapped[datetime.datetime] = mapped_column(nullable=True)
     is_deleted: Mapped[bool] = mapped_column(nullable=False, default=True)

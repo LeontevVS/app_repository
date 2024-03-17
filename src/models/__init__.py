@@ -1,1 +1,1 @@
-from .landings import LandingModel
+from .users import UserModel
