@@ -13,11 +13,11 @@ from services.users import UserService
 class AuthUserService:
     def __init__(
         self,
-        get_session_maker: Callable[[], async_sessionmaker],
+        async_session_maker: async_sessionmaker,
         user_service: UserService,
         auth_service: AuthService,
     ):
-        self._get_session_maker = get_session_maker
+        self._async_session_maker = async_session_maker
         self.user_service = user_service
         self.auth_service = auth_service
 

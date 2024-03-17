@@ -1,4 +1,4 @@
-from depends.db_connector import get_async_session
+from depends.db_connector import async_session_maker
 from services.users import UserService
 from repositories.users import UserRepository
 
@@ -8,7 +8,7 @@ user_repository = UserRepository()
 
 # services
 user_service = UserService(
-    get_session_maker=get_async_session,
+    async_session_maker=async_session_maker,
     user_repository=user_repository,
 )
 
