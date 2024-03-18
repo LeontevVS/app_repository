@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import HTTPException, status
 from jwt import InvalidTokenError
@@ -16,7 +16,7 @@ class AuthService:
         self._auth_repository = auth_repository
 
     async def get_couple_tokens_for_user(self, user: UserTokenInfoDTO) -> AuthDTO:
-        now = datetime.utcnow()
+        now = datetime.now(tz=timezone.utc)
         access_payload = TokenPayload(
             sub=user.id,
             iat=now.timestamp(),
@@ -37,7 +37,7 @@ class AuthService:
         )
 
     async def reissue_tokens(self, refresh_token: str) -> AuthDTO:
-        now = datetime.utcnow()
+        now = datetime.now(tz=timezone.utc)
         access_token = await self.get_access_token(refresh_token)
         token_info = await self.get_token_info(refresh_token)
         refresh_payload = TokenPayload(
@@ -54,7 +54,7 @@ class AuthService:
         )
 
     async def get_access_token(self, refresh_token: str) -> str:
-        now = datetime.utcnow()
+        now = datetime.now(tz=timezone.utc)
         token_info = await self.get_token_info(refresh_token)
         if await self.token_processor.is_nonexistent_refresh_token(refresh_token):
             raise HTTPException(
