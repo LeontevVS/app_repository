@@ -65,7 +65,7 @@ class AuthService:
             sub=token_info.id,
             iat=now.timestamp(),
             nbf=now.timestamp(),
-            exp=(now - DEFAULT_EXP_ACCESS_DELTA).timestamp(),
+            exp=(now + DEFAULT_EXP_ACCESS_DELTA).timestamp(),
             role=token_info.role,
         )
         return await self.token_processor.get_token(access_payload)
