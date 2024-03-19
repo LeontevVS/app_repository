@@ -5,8 +5,8 @@ from fastapi import (
     Request,
 )
 
-from services.auth.auth import AuthService
-from services.auth.consts import DEFAULT_EXP_REFRESH_SECONDS
+from services.auth import AuthService
+from services.auth import DEFAULT_EXP_REFRESH_SECONDS
 from depends.auth import get_auth_service
 
 

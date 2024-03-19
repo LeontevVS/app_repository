@@ -6,8 +6,8 @@ from jwt import InvalidTokenError
 from schemas.auth import AuthDTO, TokenPayload
 from schemas.auth import UserTokenInfoDTO
 from .consts import DEFAULT_EXP_ACCESS_DELTA, DEFAULT_EXP_REFRESH_DELTA
-from .repositories.auth_repository import AuthRepository
-from .use_cases import TokenProcessor
+from repositories.redis_cache.auth_repository import AuthRepository
+from services.auth.use_cases import TokenProcessor
 
 
 class AuthService:

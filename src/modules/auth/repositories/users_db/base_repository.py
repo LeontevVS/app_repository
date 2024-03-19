@@ -1,7 +1,7 @@
 from typing import Protocol, List
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.base_model import ORMBaseModel
 

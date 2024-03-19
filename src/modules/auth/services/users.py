@@ -1,11 +1,9 @@
-from typing import Callable
-
 import bcrypt
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from enums.user_enums import PrivateUserRoles
-from repositories.users import UserRepository
+from repositories.users_db.users import UserRepository
 from schemas.users import UserSignInDTO, UserLogInDTO, ValidUser, UserToCreate
 
 

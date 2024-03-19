@@ -1,6 +1,6 @@
 from depends.db_connector import async_session_maker
 from services.users import UserService
-from repositories.users import UserRepository
+from repositories.users_db.users import UserRepository
 
 
 # repositories

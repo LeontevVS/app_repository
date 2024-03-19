@@ -1,6 +1,6 @@
 from depends.redis_connector import redis_pool
-from services.auth.auth import AuthService
-from services.auth.repositories.auth_repository import AuthRepository
+from services.auth import AuthService
+from repositories.redis_cache.auth_repository import AuthRepository
 
 
 # repositories

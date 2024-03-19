@@ -1,8 +1,8 @@
 import jwt
 
 from schemas.auth import AuthDTO, TokenPayload
-from services.auth.consts import DEFAULT_EXP_REFRESH_DELTA
-from services.auth.repositories.auth_repository import AuthRepository
+from .consts import DEFAULT_EXP_REFRESH_DELTA
+from repositories.redis_cache.auth_repository import AuthRepository
 from src.config import settings
 
 
