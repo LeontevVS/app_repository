@@ -3,11 +3,11 @@ from datetime import datetime, timezone
 from fastapi import HTTPException, status
 from jwt import InvalidTokenError
 
-from schemas.auth import AuthDTO, TokenPayload
-from schemas.auth import UserTokenInfoDTO
+from src.modules.auth.schemas.auth import AuthDTO, TokenPayload
+from src.modules.auth.schemas.auth import UserTokenInfoDTO
 from .consts import DEFAULT_EXP_ACCESS_DELTA, DEFAULT_EXP_REFRESH_DELTA
-from repositories.redis_cache.auth_repository import AuthRepository
-from services.auth.use_cases import TokenProcessor
+from src.modules.auth.repositories.redis_cache.auth_repository import AuthRepository
+from src.modules.auth.services.auth.use_cases import TokenProcessor
 
 
 class AuthService:

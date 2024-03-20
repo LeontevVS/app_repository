@@ -1,9 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
-from schemas.users import UserToCreate
+from src.modules.auth.schemas.users import UserToCreate
 from .base_repository import ORMRepository
-from models.users import UserModel
+from src.modules.auth.models.users import UserModel
 
 
 class UserRepository(ORMRepository):

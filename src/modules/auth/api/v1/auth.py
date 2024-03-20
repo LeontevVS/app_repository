@@ -5,9 +5,9 @@ from fastapi import (
     Request,
 )
 
-from services.auth import AuthService
-from services.auth import DEFAULT_EXP_REFRESH_SECONDS
-from depends.auth import get_auth_service
+from src.modules.auth.services.auth import AuthService
+from src.modules.auth.services.auth import DEFAULT_EXP_REFRESH_SECONDS
+from src.modules.auth.depends.auth import get_auth_service
 
 
 router = APIRouter(tags=['auth'], prefix='/auth')

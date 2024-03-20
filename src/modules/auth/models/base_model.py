@@ -1,7 +1,5 @@
 import datetime
-from typing import Annotated
 
-from sqlalchemy import func
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,

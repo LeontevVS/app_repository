@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from enums.user_enums import PrivateUserRoles
+from src.modules.auth.enums.user_enums import PrivateUserRoles
 
 
 class TokenPayload(BaseModel):

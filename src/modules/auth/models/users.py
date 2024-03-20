@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from enums.user_enums import PrivateUserRoles
-from models.base_model import ORMBaseModel
+from src.modules.auth.enums.user_enums import PrivateUserRoles
+from src.modules.auth.models.base_model import ORMBaseModel
 
 
 class UserModel(ORMBaseModel):

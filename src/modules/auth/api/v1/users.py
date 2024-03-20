@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Response
 
-from depends.auth_users import get_auth_user_service
-from schemas.users import UserLogInDTO, UserSignInDTO
-from services.auth.consts import DEFAULT_EXP_REFRESH_SECONDS
-from services.auth_users import AuthUserService
+from src.modules.auth.depends.auth_users import get_auth_user_service
+from src.modules.auth.schemas.users import UserLogInDTO, UserSignInDTO
+from src.modules.auth.services.auth.consts import DEFAULT_EXP_REFRESH_SECONDS
+from src.modules.auth.services.auth_users import AuthUserService
 
 router = APIRouter(tags=['users'], prefix='/users')
 

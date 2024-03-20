@@ -3,7 +3,7 @@ from typing import Protocol, List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.base_model import ORMBaseModel
+from src.modules.auth.models.base_model import ORMBaseModel
 
 
 class IRepository(Protocol):

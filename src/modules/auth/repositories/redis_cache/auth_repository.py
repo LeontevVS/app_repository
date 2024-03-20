@@ -3,7 +3,7 @@ from datetime import timedelta
 import orjson
 from redis.asyncio import Redis, ConnectionPool
 
-from schemas.auth import TokenPayload
+from src.modules.auth.schemas.auth import TokenPayload
 
 
 class RedisConnection:

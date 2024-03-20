@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from enums.user_enums import PublicUserRoles, PrivateUserRoles
+from src.modules.auth.enums.user_enums import PublicUserRoles, PrivateUserRoles
 
 
 class UserSignInDTO(BaseModel):

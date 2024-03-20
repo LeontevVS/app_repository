@@ -3,11 +3,11 @@ from typing import Annotated
 from fastapi import HTTPException, status, Header
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
-from enums.user_enums import PrivateUserRoles
-from schemas.auth import UserTokenInfoDTO, AuthDTO, AuthenticatedUserDTO
-from schemas.users import UserSignInDTO, UserLogInDTO
-from services.auth.auth import AuthService
-from services.users import UserService
+from src.modules.auth.enums.user_enums import PrivateUserRoles
+from src.modules.auth.schemas.auth import UserTokenInfoDTO, AuthDTO, AuthenticatedUserDTO
+from src.modules.auth.schemas.users import UserSignInDTO, UserLogInDTO
+from src.modules.auth.services.auth.auth import AuthService
+from src.modules.auth.services.users import UserService
 
 
 class AuthUserService:

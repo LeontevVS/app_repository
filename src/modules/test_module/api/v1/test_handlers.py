@@ -3,7 +3,7 @@ from fastapi import (
     Depends,
 )
 
-from modules.auth.integrations import user_permission
+from src.modules.auth.integrations import user_permission
 
 
 router = APIRouter(tags=['test'], prefix='/test')

@@ -1,4 +1,4 @@
-from services.auth_users import AuthUserService, UserPermission
+from src.modules.auth.services.auth_users import AuthUserService, UserPermission
 from .auth import auth_service
 from .db_connector import async_session_maker
 from .users import user_service
