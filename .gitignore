@@ -1,4 +1,4 @@
 auth/poetry.lock
 auth/.env
-certs/private.pem
-certs/public.pem
+auth/certs/private.pem
+auth/certs/public.pem
