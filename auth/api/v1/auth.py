@@ -5,6 +5,7 @@ from fastapi import (
     Request,
 )
 
+from depends.auth_users import user_permission
 from services.auth import AuthService
 from services.auth import DEFAULT_EXP_REFRESH_SECONDS
 from depends.auth import get_auth_service
@@ -44,3 +45,31 @@ async def get_access_token(
         'access_token': access_token,
         'type': 'Bearer',
     }
+
+
+@router.post('/admin')
+async def get_access_token(
+    user_info=Depends(user_permission.auth_admin_permissions)
+):
+    return user_info
+
+
+@router.post('/seller')
+async def get_access_token(
+    user_info=Depends(user_permission.auth_seller_permissions)
+):
+    return user_info
+
+
+@router.post('/buyer')
+async def get_access_token(
+    user_info=Depends(user_permission.auth_buyer_permissions)
+):
+    return user_info
+
+
+@router.post('/all')
+async def get_access_token(
+    user_info=Depends(user_permission.auth_all_permissions)
+):
+    return user_info
