@@ -1,17 +1,15 @@
 version: '3'
 
 services:
-  redis-auth:
+  redis_auth:
     container_name: redis_auth
     restart: always
     image: 'redis:4-alpine'
     command: redis-server --requirepass mlFV2GMI
-    ports:
-      - '9876:9876'
     networks:
       default:
 
-  postgres-auth:
+  postgres_auth:
     container_name: postgres_auth
     image: postgres
     environment:
@@ -20,12 +18,8 @@ services:
       PGDATA: /data/postgres_auth
     volumes:
       - postgres_auth:/data/postgres_auth
-    ports:
-      - "1432:5432"
-    networks:
-      - default
 
-  auth_app:
+  auth_service:
     build:
       context: auth
     env_file:
@@ -34,20 +28,14 @@ services:
     ports:
       - "8888:8080"
     depends_on:
-      - postgres-auth
-      - redis-auth
-    networks:
-      - default
+      - postgres_auth
+      - redis_auth
 
-  test_app:
+  test_service:
     build:
       context: test_service
     env_file:
       - auth/.env
-    ports:
-      - "8889:8080"
-    networks:
-      - default
 
   nginx:
     image: nginx
@@ -55,19 +43,13 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "80:80"
+      - "8080:80"
       - "443:443"
     links:
-      - auth_app
-      - test_app
+      - auth_service
+      - test_service
     restart:
       always
-    networks:
-      - default
-
-networks:
-  default:
-    driver: bridge
 
 volumes:
   postgres_auth:
