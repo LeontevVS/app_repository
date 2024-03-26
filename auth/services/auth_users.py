@@ -49,8 +49,7 @@ class AuthUserService:
         )
         if authenticated_user.role not in roles:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"invalid token error",
+                status_code=status.HTTP_403_FORBIDDEN,
             )
         return authenticated_user
 

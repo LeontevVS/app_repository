@@ -24,9 +24,7 @@ services:
       context: auth
     env_file:
       - auth/.env
-    command: ["/auth_app/docker/pg_migrate.sh"]
-    ports:
-      - "8888:8080"
+    command: ["/auth_app/docker/start_service.sh"]
     depends_on:
       - postgres_auth
       - redis_auth
