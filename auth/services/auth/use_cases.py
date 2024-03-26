@@ -66,5 +66,5 @@ class TokenProcessor:
         return TokenPayload.model_validate(obj=decoded, from_attributes=True)
 
     async def is_nonexistent_refresh_token(self, refresh_token: str) -> bool:
-        token_info = self._auth_repository.get_refresh_token_info(refresh_token)
+        token_info = await self._auth_repository.get_refresh_token_info(refresh_token)
         return token_info is None

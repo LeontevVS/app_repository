@@ -47,29 +47,29 @@ async def get_access_token(
     }
 
 
-@router.post('/admin')
-async def get_access_token(
+@router.get('/admin/')
+async def auth_admin(
     user_info=Depends(user_permission.auth_admin_permissions)
 ):
     return user_info
 
 
-@router.post('/seller')
-async def get_access_token(
+@router.get('/seller/')
+async def auth_seller(
     user_info=Depends(user_permission.auth_seller_permissions)
 ):
     return user_info
 
 
-@router.post('/buyer')
-async def get_access_token(
+@router.get('/buyer/')
+async def auth_buyer(
     user_info=Depends(user_permission.auth_buyer_permissions)
 ):
     return user_info
 
 
-@router.post('/all')
-async def get_access_token(
+@router.get('/all/')
+async def auth_all(
     user_info=Depends(user_permission.auth_all_permissions)
 ):
     return user_info
