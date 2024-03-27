@@ -47,11 +47,15 @@ class AuthService:
             exp=(now + DEFAULT_EXP_REFRESH_DELTA).timestamp(),
             role=token_info.role,
         )
-        refresh_token = await self.token_processor.create_refresh_token(refresh_payload)
+        new_refresh_token = await self.token_processor.create_refresh_token(refresh_payload)
+        await self.remove_refresh_token(refresh_token)
         return AuthDTO(
             access_token=access_token,
-            refresh_token=refresh_token,
+            refresh_token=new_refresh_token,
         )
+
+    async def remove_refresh_token(self, token: str) -> None:
+        await self._auth_repository.remove_token(token)
 
     async def get_access_token(self, refresh_token: str) -> str:
         now = datetime.now(tz=timezone.utc)

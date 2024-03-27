@@ -44,3 +44,7 @@ class AuthRepository:
                 value=orjson.dumps(token_info.model_dump()),
                 ex=exp,
             )
+
+    async def remove_token(self, token: str) -> None:
+        async with RedisConnection(self._redis_pool) as connection:
+            await connection.delete(token)

@@ -53,6 +53,9 @@ class AuthUserService:
             )
         return authenticated_user
 
+    async def logout_user(self, refresh_token: str) -> None:
+        await self.auth_service.remove_refresh_token(refresh_token)
+
 
 class UserPermission:
     def __init__(self, auth_user_service: AuthUserService):

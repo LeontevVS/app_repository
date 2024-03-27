@@ -16,12 +16,7 @@ class TokenProcessor:
         refresh_payload: TokenPayload,
     ) -> AuthDTO:
         access_token = await self.get_token(access_payload)
-        refresh_token = await self.get_token(refresh_payload)
-        await self._auth_repository.set_cache_token(
-            token=refresh_token,
-            token_info=refresh_payload,
-            exp=DEFAULT_EXP_REFRESH_DELTA,
-        )
+        refresh_token = await self.create_refresh_token(refresh_payload)
         return AuthDTO(
             access_token=access_token,
             refresh_token=refresh_token,

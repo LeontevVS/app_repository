@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, Request
 
 from depends.auth_users import get_auth_user_service
 from schemas.users import UserLogInDTO, UserSignInDTO
@@ -9,7 +9,7 @@ router = APIRouter(tags=['users'], prefix='/users')
 
 
 @router.post('/login/')
-async def auth_user(
+async def login_user(
     response: Response,
     user: UserLogInDTO,
     auth_user_service: AuthUserService = Depends(get_auth_user_service),
@@ -24,6 +24,16 @@ async def auth_user(
         'access_token': tokens.access_token,
         'type': 'Bearer',
     }
+
+
+@router.post('/logout/')
+async def logout_user(
+    request: Request,
+    auth_user_service: AuthUserService = Depends(get_auth_user_service),
+):
+    refresh_token = request.cookies.get('refresh_token', '')
+    await auth_user_service.logout_user(refresh_token)
+    return {'status': 'ok'}
 
 
 @router.post('/signin/')
