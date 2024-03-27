@@ -2,3 +2,4 @@ auth/poetry.lock
 auth/.env
 auth/certs/private.pem
 auth/certs/public.pem
+.idea
