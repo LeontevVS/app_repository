@@ -1,19 +1,14 @@
-from fastapi import APIRouter, Depends, Response, Request
+from fastapi import APIRouter, Response, Request
 
-from depends.auth_users import get_auth_user_service
+from depends.auth_users import auth_user_service
 from schemas.users import UserLogInDTO, UserSignInDTO
 from services.auth.consts import DEFAULT_EXP_REFRESH_SECONDS
-from services.auth_users import AuthUserService
 
 router = APIRouter(tags=['users'], prefix='/users')
 
 
 @router.post('/login/')
-async def login_user(
-    response: Response,
-    user: UserLogInDTO,
-    auth_user_service: AuthUserService = Depends(get_auth_user_service),
-):
+async def login_user(response: Response, user: UserLogInDTO):
     tokens = await auth_user_service.login_user(user)
     response.set_cookie(
         key='refresh_token',
@@ -27,21 +22,14 @@ async def login_user(
 
 
 @router.post('/logout/')
-async def logout_user(
-    request: Request,
-    auth_user_service: AuthUserService = Depends(get_auth_user_service),
-):
+async def logout_user(request: Request):
     refresh_token = request.cookies.get('refresh_token', '')
     await auth_user_service.logout_user(refresh_token)
     return {'status': 'ok'}
 
 
 @router.post('/signin/')
-async def register_user(
-    response: Response,
-    user: UserSignInDTO,
-    auth_user_service: AuthUserService = Depends(get_auth_user_service),
-):
+async def register_user(response: Response, user: UserSignInDTO):
     tokens = await auth_user_service.signin_user(user)
     response.set_cookie(
         key='refresh_token',

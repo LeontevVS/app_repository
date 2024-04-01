@@ -1,25 +1,14 @@
-from fastapi import (
-    APIRouter,
-    Depends,
-    Response,
-    Request,
-)
+from fastapi import APIRouter, Response, Request
 
-from depends.auth_users import user_permission
-from services.auth import AuthService
 from services.auth import DEFAULT_EXP_REFRESH_SECONDS
-from depends.auth import get_auth_service
+from depends.auth import auth_service
 
 
 router = APIRouter(tags=['auth'], prefix='/auth')
 
 
 @router.post('/refresh/')
-async def get_token_couple(
-    response: Response,
-    request: Request,
-    auth_service: AuthService = Depends(get_auth_service),
-):
+async def get_token_couple(response: Response, request: Request):
     # TODO: add removing refresh tokens if token was deactivated
     refresh_token = request.cookies.get('refresh_token', '')
     tokens = await auth_service.reissue_tokens(refresh_token)
@@ -35,41 +24,10 @@ async def get_token_couple(
 
 
 @router.post('/')
-async def get_access_token(
-    request: Request,
-    auth_service: AuthService = Depends(get_auth_service),
-):
+async def get_access_token(request: Request):
     refresh_token = request.cookies.get('refresh_token', '')
     access_token = await auth_service.get_access_token(refresh_token)
     return {
         'access_token': access_token,
         'type': 'Bearer',
     }
-
-
-@router.get('/admin/')
-async def auth_admin(
-    user_info=Depends(user_permission.auth_admin_permissions)
-):
-    return user_info
-
-
-@router.get('/seller/')
-async def auth_seller(
-    user_info=Depends(user_permission.auth_seller_permissions)
-):
-    return user_info
-
-
-@router.get('/buyer/')
-async def auth_buyer(
-    user_info=Depends(user_permission.auth_buyer_permissions)
-):
-    return user_info
-
-
-@router.get('/all/')
-async def auth_all(
-    user_info=Depends(user_permission.auth_all_permissions)
-):
-    return user_info

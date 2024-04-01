@@ -7,17 +7,13 @@ from repositories.users_db.users import UserRepository
 from schemas.users import UserSignInDTO, UserLogInDTO, ValidUser, UserToCreate
 
 
-class UserService:
-    def __init__(
-        self,
-        async_session_maker: async_sessionmaker[AsyncSession],
-        user_repository: UserRepository
-    ):
+class UserController:
+    def __init__(self, async_session_maker: async_sessionmaker[AsyncSession], user_repository: UserRepository):
         self._async_session_maker = async_session_maker
-        self.user_repository = user_repository
+        self._user_repository = user_repository
 
     async def get_user_by_login_creds(self, user: UserLogInDTO) -> ValidUser:
-        existing_user = await self.user_repository.get_user_by_phone_number(
+        existing_user = await self._user_repository.get_user_by_phone_number(
             async_session_maker=self._async_session_maker,
             phone_number=user.phone_number,
         )
@@ -39,7 +35,7 @@ class UserService:
         )
 
     async def create_user(self, user: UserSignInDTO) -> ValidUser:
-        existing_user = await self.user_repository.get_user_by_phone_number(
+        existing_user = await self._user_repository.get_user_by_phone_number(
             async_session_maker=self._async_session_maker,
             phone_number=user.phone_number,
         )
@@ -53,7 +49,7 @@ class UserService:
             role=PrivateUserRoles(user.role),
             hashed_password=self._hash_password(user.password)
         )
-        new_user = await self.user_repository.create_user(
+        new_user = await self._user_repository.create_user(
             async_session_maker=self._async_session_maker,
             user_data=user_to_create,
         )
