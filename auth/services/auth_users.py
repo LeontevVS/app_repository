@@ -28,6 +28,3 @@ class AuthUserService:
             )
         )
         return couple_token
-
-    async def logout_user(self, refresh_token: str) -> None:
-        await self._auth_service.remove_refresh_token(refresh_token)

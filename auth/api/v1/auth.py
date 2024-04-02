@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Response, Request
+from typing import Annotated
+
+from fastapi import APIRouter, Response, Request, Header
 
 from services.auth import DEFAULT_EXP_REFRESH_SECONDS
 from depends.auth import auth_service
@@ -23,7 +25,7 @@ async def get_token_couple(response: Response, request: Request):
     }
 
 
-@router.post('/')
+@router.post('/access')
 async def get_access_token(request: Request):
     refresh_token = request.cookies.get('refresh_token', '')
     access_token = await auth_service.get_access_token(refresh_token)
@@ -31,3 +33,15 @@ async def get_access_token(request: Request):
         'access_token': access_token,
         'type': 'Bearer',
     }
+
+
+@router.post('/')
+async def authenticate(access_token: Annotated[str | None, Header()]):
+    return await auth_service.get_token_info(access_token)
+
+
+@router.post('/logout/')
+async def logout_user(request: Request):
+    refresh_token = request.cookies.get('refresh_token', '')
+    await auth_service.remove_refresh_token(refresh_token)
+    return {'status': 'ok'}

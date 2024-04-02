@@ -21,13 +21,6 @@ async def login_user(response: Response, user: UserLogInDTO):
     }
 
 
-@router.post('/logout/')
-async def logout_user(request: Request):
-    refresh_token = request.cookies.get('refresh_token', '')
-    await auth_user_service.logout_user(refresh_token)
-    return {'status': 'ok'}
-
-
 @router.post('/signin/')
 async def register_user(response: Response, user: UserSignInDTO):
     tokens = await auth_user_service.signin_user(user)
