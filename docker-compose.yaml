@@ -35,17 +35,26 @@ services:
     env_file:
       - auth/.env
 
-  nginx:
+  gateway_main:
     image: nginx
-    container_name: nginx
+    container_name: gateway_main
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "8080:80"
       - "443:443"
     links:
+      - gateway_auth
+    restart:
+      always
+
+  gateway_auth:
+    image: nginx
+    container_name: gateway_auth
+    volumes:
+      - ./auth/nginx.conf:/etc/nginx/nginx.conf
+    links:
       - auth_service
-      - test_service
     restart:
       always
 

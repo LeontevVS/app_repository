@@ -1,7 +1,7 @@
 from schemas.auth import AuthDTO, UserTokenInfoDTO
 from schemas.users import UserLogInDTO, UserSignInDTO
 from services.auth import AuthService
-from services.users.users import UserService
+from services.users import UserService
 
 
 class AuthUserService:
