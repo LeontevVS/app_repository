@@ -6,10 +6,11 @@ from services.auth import DEFAULT_EXP_REFRESH_SECONDS
 from depends.auth import auth_service
 
 
-router = APIRouter(tags=['auth'], prefix='/auth')
+private_router = APIRouter(tags=['auth'])
+public_router = APIRouter(tags=['auth'], prefix='/public')
 
 
-@router.post('/refresh/')
+@public_router.post('/refresh/')
 async def get_token_couple(response: Response, request: Request):
     # TODO: add removing refresh tokens if token was deactivated
     refresh_token = request.cookies.get('refresh_token', '')
@@ -25,7 +26,7 @@ async def get_token_couple(response: Response, request: Request):
     }
 
 
-@router.post('/access')
+@public_router.post('/access/')
 async def get_access_token(request: Request):
     refresh_token = request.cookies.get('refresh_token', '')
     access_token = await auth_service.get_access_token(refresh_token)
@@ -35,12 +36,12 @@ async def get_access_token(request: Request):
     }
 
 
-@router.post('/')
+@public_router.post('/')
 async def authenticate(access_token: Annotated[str | None, Header()]):
     return await auth_service.get_token_info(access_token)
 
 
-@router.post('/logout/')
+@public_router.post('/logout/')
 async def logout_user(request: Request):
     refresh_token = request.cookies.get('refresh_token', '')
     await auth_service.remove_refresh_token(refresh_token)

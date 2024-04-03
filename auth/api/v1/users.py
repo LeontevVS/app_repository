@@ -4,10 +4,11 @@ from depends.auth_users import auth_user_service
 from schemas.users import UserLogInDTO, UserSignInDTO
 from services.auth.consts import DEFAULT_EXP_REFRESH_SECONDS
 
-router = APIRouter(tags=['users'], prefix='/users')
+private_router = APIRouter(tags=['users'], prefix='/users')
+public_router = APIRouter(tags=['auth'], prefix='/users/public')
 
 
-@router.post('/login/')
+@public_router.post('/login/')
 async def login_user(response: Response, user: UserLogInDTO):
     tokens = await auth_user_service.login_user(user)
     response.set_cookie(
@@ -21,7 +22,7 @@ async def login_user(response: Response, user: UserLogInDTO):
     }
 
 
-@router.post('/signin/')
+@public_router.post('/signin/')
 async def register_user(response: Response, user: UserSignInDTO):
     tokens = await auth_user_service.signin_user(user)
     response.set_cookie(
