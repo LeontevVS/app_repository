@@ -29,7 +29,6 @@ services:
       context: shop
     env_file:
       - shop/.env
-#    command: [ "/shop/docker/start_service.sh" ]
     ports:
       - "8080:8080"
     depends_on:

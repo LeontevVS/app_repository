@@ -1,7 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Response
-from fastapi.params import Depends
+from fastapi import APIRouter, Response, Depends
 
 from modules.users.auth.services.token_service.consts import DEFAULT_EXP_REFRESH_SECONDS
 from .models import EmailSignInViewModel, AccessTokenOutViewModel, EmailLogInViewModel
