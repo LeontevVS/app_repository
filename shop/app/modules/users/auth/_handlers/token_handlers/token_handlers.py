@@ -5,6 +5,7 @@ from fastapi import APIRouter, Response, Depends, Cookie, HTTPException
 
 from .models import AccessTokenOutViewModel
 from modules.users.auth.services.token_service import TokenServiceP, get_token_service, RefreshTokenExpiredError
+from modules.users.auth.services.token_service.consts import DEFAULT_EXP_REFRESH_SECONDS
 
 token_router = APIRouter(prefix="/auth")
 
@@ -24,6 +25,9 @@ async def access(
         response.set_cookie(
             key="refresh_token",
             value="",
+            max_age=DEFAULT_EXP_REFRESH_SECONDS,
+            secure=True,
+            httponly=True,
         )
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Unauthorised")
     return AccessTokenOutViewModel(token=access_token)
@@ -44,10 +48,16 @@ async def refresh(
         response.set_cookie(
             key="refresh_token",
             value="",
+            max_age=DEFAULT_EXP_REFRESH_SECONDS,
+            secure=True,
+            httponly=True,
         )
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Unauthorised")
     response.set_cookie(
         key="refresh_token",
         value=couple_tokens.refresh_token,
+        max_age=DEFAULT_EXP_REFRESH_SECONDS,
+        secure=True,
+        httponly=True,
     )
     return AccessTokenOutViewModel(token=couple_tokens.access_token)

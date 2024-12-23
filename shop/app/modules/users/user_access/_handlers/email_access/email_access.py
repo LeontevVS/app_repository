@@ -24,6 +24,8 @@ async def email_sign_in(
         key="refresh_token",
         value=tokens.refresh_token,
         max_age=DEFAULT_EXP_REFRESH_SECONDS,
+        secure=True,
+        httponly=True,
     )
     return AccessTokenOutViewModel(token=tokens.access_token)
 
@@ -42,5 +44,7 @@ async def email_log_in(
         key="refresh_token",
         value=tokens.refresh_token,
         max_age=DEFAULT_EXP_REFRESH_SECONDS,
+        secure=True,
+        httponly=True,
     )
     return AccessTokenOutViewModel(token=tokens.access_token)
