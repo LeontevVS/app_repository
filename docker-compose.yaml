@@ -28,7 +28,7 @@ services:
     build:
       context: shop
     env_file:
-      - shop/.env
+      - .env
     ports:
       - "8080:8080"
     depends_on:

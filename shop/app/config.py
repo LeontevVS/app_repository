@@ -1,14 +1,10 @@
 from pathlib import Path
 
-from dotenv import load_dotenv
 from pydantic import Field, computed_field, BaseModel
 from pydantic_settings import BaseSettings
 
 
 BASE_DIR = Path(__file__).parent.parent
-ENV_FILE = str(Path(__file__).parent.parent) + "/.env"
-
-load_dotenv(dotenv_path=ENV_FILE)
 
 
 class AuthJWT(BaseModel):
@@ -22,11 +18,6 @@ class _BaseRedisConfig(BaseSettings):
     port: int = Field(alias="REDIS_PORT")
     password: str = Field(alias="REDIS_PASSWORD")
     db: int
-
-    # @computed_field
-    # @property
-    # def dsn(self) -> str:
-    #     return f"redis://{self.username}:{self.password}@{self.host}:{self.port}/{self.db}"
 
 
 class UsersRedisConfig(_BaseRedisConfig):
