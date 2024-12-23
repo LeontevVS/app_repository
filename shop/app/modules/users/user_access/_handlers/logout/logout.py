@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any, Union
 
 from fastapi import APIRouter, Depends, Response, Cookie
 
@@ -12,7 +12,7 @@ logout_router = APIRouter()
 async def logout(
     logout_service: Annotated[LogoutUserServiceP, Depends(get_logout_service)],
     response: Response,
-    refresh_token: Cookie(),
+    refresh_token: Annotated[str, Cookie()] = None,
 ) -> dict:
     if refresh_token:
         await logout_service.logout(refresh_token=refresh_token)
