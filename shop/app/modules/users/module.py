@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from modules.users.user._handlers.user_handlers import user_router
 from modules.users.user_access._handlers.email_access import email_router
 from modules.users.user_access._handlers.logout import logout_router
 from modules.users.auth._handlers.token_handlers import token_router
@@ -10,6 +11,7 @@ def _get_v1_router() -> APIRouter:
     v1_router.include_router(email_router)
     v1_router.include_router(logout_router)
     v1_router.include_router(token_router)
+    v1_router.include_router(user_router)
     return v1_router
 
 

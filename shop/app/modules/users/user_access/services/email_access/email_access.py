@@ -84,7 +84,7 @@ class EmailUserAccessService(EmailUserAccessServiceP):
         )
 
 
-def get_email_user_access_service() -> EmailUserAccessService:
+def get_email_user_access_service() -> EmailUserAccessServiceP:
     return EmailUserAccessService(
         user_service=get_user_service(),
         auth_service=get_token_service(),

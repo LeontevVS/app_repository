@@ -3,4 +3,5 @@
 export PYTHONPATH=/app
 
 alembic upgrade head
-uvicorn app:app --host 0.0.0.0 --port 8080
+python3 app.py
+#uvicorn app:app --host 0.0.0.0 --port 8080

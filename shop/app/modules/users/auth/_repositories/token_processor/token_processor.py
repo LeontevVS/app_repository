@@ -39,7 +39,7 @@ class TokenProcessor(TokenProcessorP):
         return TokenPayloadDTO.model_validate(obj=decoded, from_attributes=True)
 
 
-def get_token_processor() -> TokenProcessor:
+def get_token_processor() -> TokenProcessorP:
     return TokenProcessor(
         private_key=SETTINGS.auth_jwt.private_key_path.read_text(),
         public_key=SETTINGS.auth_jwt.public_key_path.read_text(),

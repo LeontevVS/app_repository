@@ -26,7 +26,6 @@ async def access(
             key="refresh_token",
             value="",
             max_age=DEFAULT_EXP_REFRESH_SECONDS,
-            secure=True,
             httponly=True,
         )
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Unauthorised")
@@ -49,7 +48,6 @@ async def refresh(
             key="refresh_token",
             value="",
             max_age=DEFAULT_EXP_REFRESH_SECONDS,
-            secure=True,
             httponly=True,
         )
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Unauthorised")
@@ -57,7 +55,6 @@ async def refresh(
         key="refresh_token",
         value=couple_tokens.refresh_token,
         max_age=DEFAULT_EXP_REFRESH_SECONDS,
-        secure=True,
         httponly=True,
     )
     return AccessTokenOutViewModel(token=couple_tokens.access_token)

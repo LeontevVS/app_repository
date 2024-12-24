@@ -10,5 +10,5 @@ class LogoutUserService(LogoutUserServiceP):
         await self._token_service.remove_refresh_token(refresh_token=refresh_token)
 
 
-def get_logout_service() -> LogoutUserService:
+def get_logout_service() -> LogoutUserServiceP:
     return LogoutUserService(token_service=get_token_service())

@@ -1,3 +1,4 @@
+from typing import Sequence
 from uuid import UUID
 
 from sqlalchemy import select
@@ -15,6 +16,11 @@ class UserRepository(BaseORMRepo, UserRepositoryP):
         result = await self._session.execute(stmt)
         return result.scalars().one_or_none()
 
+    async def get_users(self, limit: int, offset: int) -> Sequence[UserTableModel]:
+        stmt = select(UserTableModel).order_by(UserTableModel.created_at).limit(limit).offset(offset)
+        result = await self._session.execute(stmt)
+        return result.scalars().all()
+
     async def create_user(self, role: PrivateUserRoles) -> UUID:
         new_user = UserTableModel(role=role)
         self._session.add(new_user)
@@ -22,5 +28,5 @@ class UserRepository(BaseORMRepo, UserRepositoryP):
         return new_user.user_id
 
 
-def get_user_repository() -> UserRepository:
+def get_user_repository() -> UserRepositoryP:
     return UserRepository(session_maker=ASYNC_SESSION_MAKER)

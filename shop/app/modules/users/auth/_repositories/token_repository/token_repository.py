@@ -34,5 +34,5 @@ class TokenRepository(BaseRedisRepo, TokenRepositoryP):
         await self._client.lrem(name=user_id, count=1, value=token)
 
 
-def get_token_repository() -> TokenRepository:
+def get_token_repository() -> TokenRepositoryP:
     return TokenRepository(redis_pool=REDIS_POOL)

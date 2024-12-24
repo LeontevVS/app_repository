@@ -17,14 +17,13 @@ async def email_sign_in(
 ) -> AccessTokenOutViewModel:
     tokens = await email_access_service.signin_with_password(
         email=sign_in_data.email,
-        password=sign_in_data.password.encode(),
+        password=sign_in_data.password,
         role=sign_in_data.role,
     )
     response.set_cookie(
         key="refresh_token",
         value=tokens.refresh_token,
         max_age=DEFAULT_EXP_REFRESH_SECONDS,
-        secure=True,
         httponly=True,
     )
     return AccessTokenOutViewModel(token=tokens.access_token)
@@ -44,7 +43,6 @@ async def email_log_in(
         key="refresh_token",
         value=tokens.refresh_token,
         max_age=DEFAULT_EXP_REFRESH_SECONDS,
-        secure=True,
         httponly=True,
     )
     return AccessTokenOutViewModel(token=tokens.access_token)

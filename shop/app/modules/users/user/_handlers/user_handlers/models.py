@@ -6,11 +6,7 @@ from pydantic import BaseModel
 from modules.users.consts import PrivateUserRoles
 
 
-class CreationUserDTO(BaseModel):
-    role: PrivateUserRoles
-
-
-class UserInfoDTO(BaseModel):
+class UserOutViewModel(BaseModel):
     user_id: UUID
     role: PrivateUserRoles
     deleted: bool = False
