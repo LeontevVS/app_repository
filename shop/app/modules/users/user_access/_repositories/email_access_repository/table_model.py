@@ -11,3 +11,4 @@ class EmailAccessTableModel(ORMBaseTableModel):
     email: Mapped[str] = mapped_column(primary_key=True)
     user_id: Mapped[UUID] = mapped_column(primary_key=True)
     hashed_password: Mapped[bytes] = mapped_column(nullable=False)
+    password_salt: Mapped[bytes] = mapped_column(nullable=False)

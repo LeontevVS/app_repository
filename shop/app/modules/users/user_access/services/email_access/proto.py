@@ -9,7 +9,7 @@ class EmailUserAccessServiceP(Protocol):
     _user_service: UserServiceP
     _auth_service: TokenServiceP
 
-    async def login_with_password(self, email: str, password: str) -> CoupleTokensDTO | None:
+    async def login_with_password(self, email: str, password: bytes) -> CoupleTokensDTO | None:
         pass
 
     async def signin_with_password(self, email: str, password: bytes, role: PublicUserRoles) -> CoupleTokensDTO | None:

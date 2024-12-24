@@ -122,7 +122,7 @@ class TokenService(TokenServiceP):
         return refresh_token_info
 
 
-def get_token_service() -> TokenService:
+def get_token_service() -> TokenServiceP:
     return TokenService(
         token_processor=get_token_processor(),
         token_repository=get_token_repository(),

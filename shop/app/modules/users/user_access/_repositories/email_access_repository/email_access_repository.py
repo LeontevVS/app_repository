@@ -17,5 +17,5 @@ class EmailAccessRepository(BaseORMRepo, EmailAccessRepositoryP):
         return result.scalars().one_or_none()
 
 
-def get_email_access_repository() -> EmailAccessRepository:
+def get_email_access_repository() -> EmailAccessRepositoryP:
     return EmailAccessRepository(session_maker=ASYNC_SESSION_MAKER)

@@ -23,5 +23,5 @@ class UserService(UserServiceP):
             ) if user_model else None
 
 
-def get_user_service() -> UserService:
+def get_user_service() -> UserServiceP:
     return UserService(user_repo=get_user_repository())
