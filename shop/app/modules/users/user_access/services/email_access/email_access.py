@@ -9,6 +9,7 @@ from modules.users.auth.services.token_service import (
 )
 from modules.users.consts import PublicUserRoles, PrivateUserRoles
 from modules.users.user.services.user_service import UserServiceP, CreationUserDTO, get_user_service
+from .exc import EmailAccessAlreadyExistsError, IncorrectLoginDataError
 from .proto import EmailUserAccessServiceP
 from modules.users.user_access._repositories.email_access_repository import (
     EmailAccessRepositoryP,
@@ -38,16 +39,18 @@ class EmailUserAccessService(EmailUserAccessServiceP):
         async with self._email_access_repo:
             email_access = await self._email_access_repo.get_email_access(email=email)
             if not email_access:
-                return
+                raise IncorrectLoginDataError()
             password_salt: bytes = cast(bytes, email_access.password_salt)
             hashed_input_password = await self._password_cryptographer.encrypt_password(
                 password=password,
                 salt=password_salt,
             )
             if email_access.hashed_password != hashed_input_password:
-                return
+                IncorrectLoginDataError()
             user_id: UUID = cast(UUID, email_access.user_id)
             user = await self._user_service.get_user(user_id=user_id)
+            if user.deleted:
+                raise IncorrectLoginDataError()
             return await self._auth_service.generate_couple_tokens_for_user(
                 user_info=TokenUserInfoDTO(
                     user_id=user.user_id,
@@ -59,7 +62,7 @@ class EmailUserAccessService(EmailUserAccessServiceP):
         async with self._email_access_repo:
             existing_email_access = await self._email_access_repo.get_email_access(email=email)
             if existing_email_access:
-                return
+                raise EmailAccessAlreadyExistsError()
             new_user_id = await self._user_service.create_user(
                 creation_data=CreationUserDTO(role=PrivateUserRoles(role))
             )
