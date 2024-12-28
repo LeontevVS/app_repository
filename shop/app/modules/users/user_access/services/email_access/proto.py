@@ -12,5 +12,8 @@ class EmailUserAccessServiceP(Protocol):
     async def login_with_password(self, email: str, password: bytes) -> CoupleTokensDTO | None:
         pass
 
-    async def signin_with_password(self, email: str, password: bytes, role: PublicUserRoles) -> CoupleTokensDTO | None:
+    async def signin_with_password(self, email: str, password: bytes, role: PublicUserRoles) -> int:
+        pass
+
+    async def confirm_email(self, email: str, code: str) -> CoupleTokensDTO:
         pass

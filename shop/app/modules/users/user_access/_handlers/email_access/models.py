@@ -9,6 +9,11 @@ class EmailSignInViewModel(BaseModel):
     role: PublicUserRoles
 
 
+class EmailConfirmationViewModel(BaseModel):
+    email: str
+    code: str
+
+
 class EmailLogInViewModel(BaseModel):
     email: str
     password: bytes

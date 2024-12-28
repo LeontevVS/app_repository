@@ -35,3 +35,10 @@ class PGConfig(BaseSettings):
     @property
     def dsn(self) -> str:
         return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
+
+
+class EmailSenderConfig(BaseSettings):
+    domain: str = Field(alias="SMTP_DOMAIN")
+    port: int = Field(alias="SMTP_PORT")
+    sender_email: str = Field(alias="SENDER_EMAIL")
+    password: str = Field(alias="SENDER_EMAIL_PASSWORD")
